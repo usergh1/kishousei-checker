@@ -108,8 +108,8 @@ body{height:100%;display:flex;flex-direction:column}
 <script>
 var TOTAL=123770;
 var AGE=[{l:'20〜24',p:6260},{l:'25〜29',p:6519},{l:'30〜34',p:6395},{l:'35〜39',p:6871},{l:'40〜44',p:7631},{l:'45〜49',p:8745},{l:'50〜54',p:9788},{l:'55〜59',p:8490},{l:'60〜64',p:7571}];
-var EDU=[{l:'偏差値70↑',s:'東大京大 上位2.3%',p:2.3},{l:'偏差値65↑',s:'早慶一橋東工 上位6.7%',p:6.7},{l:'偏差値60↑',s:'MARCH関関同立 上位15.9%',p:15.9},{l:'偏差値55↑',s:'日東駒専 上位30.9%',p:30.9},{l:'偏差値50↑',s:'大卒平均 上位50%',p:50.0}];
-var ASSET=[{l:'3000万〜5000万',s:'アッパーマス 上位21.8%',cp:21.8},{l:'5000万〜1億',s:'準富裕 上位8.8%',cp:8.8},{l:'1億〜5億',s:'富裕 上位2.8%',cp:2.8},{l:'5億〜',s:'超富裕 上位0.2%',cp:0.2}];
+var EDU=[{l:'偏差値50↑',s:'大卒平均 上位50%',p:50.0},{l:'偏差値55↑',s:'日東駒専 上位30.9%',p:30.9},{l:'偏差値60↑',s:'MARCH関関同立 上位15.9%',p:15.9},{l:'偏差値65↑',s:'早慶一橋東工 上位6.7%',p:6.7},{l:'偏差値70↑',s:'東大京大 上位2.3%',p:2.3}];
+var ASSET=[{l:'100万〜',s:'マス層 上位74%',cp:74},{l:'500万〜',s:'マス層 上位51%',cp:51},{l:'1000万〜',s:'マス層 上位41%',cp:41},{l:'3000万〜',s:'アッパーマス層 上位21.8%',cp:21.8},{l:'5000万〜',s:'準富裕層 上位8.8%',cp:8.8},{l:'1億〜',s:'富裕層 上位2.8%',cp:2.8},{l:'5億〜',s:'超富裕層 上位0.2%',cp:0.2}];
 var AGE_ASSET={'20〜24':.05,'25〜29':.10,'30〜34':.25,'35〜39':.45,'40〜44':.70,'45〜49':.90,'50〜54':1.20,'55〜59':1.50,'60〜64':1.60};
 var UM_M={'20〜24':95,'25〜29':76,'30〜34':52,'35〜39':39,'40〜44':32,'45〜49':30,'50〜54':28,'55〜59':26,'60〜64':22};
 var UM_F={'20〜24':91,'25〜29':66,'30〜34':39,'35〜39':26,'40〜44':20,'45〜49':17,'50〜54':15,'55〜59':12,'60〜64':9};
@@ -152,6 +152,12 @@ function mkb(c,t,s,fn){var b=document.createElement('div');b.className='b';b.inn
 function ssel(c,btn,onS,onD){var w=btn.classList.contains('on');c.querySelectorAll('.b').forEach(function(x){x.classList.remove('on')});if(w)onD();else{btn.classList.add('on');onS()}calc()}
 function mkExp(par,id){var e=document.createElement('div');e.className='exp';e.id=id;var b=document.createElement('div');b.className='expand-btn';b.textContent='選択する ▼';b.onclick=function(){e.classList.toggle('open');b.textContent=e.classList.contains('open')?'閉じる ▲':'選択する ▼'};par.ctrl.appendChild(b);par.el.appendChild(e);return{exp:e,btn:b}}
 
+// Guide text
+var guide=document.createElement('div');
+guide.style.cssText='font-size:.62rem;color:var(--text3);text-align:center;padding:4px 8px;line-height:1.4';
+guide.textContent='気になる条件だけ選んでください。未選択の項目はフィルタされません。';
+F.appendChild(guide);
+
 // 1. GENDER
 var g=row('⚧','性別','<a href="https://www.stat.go.jp/data/jinsui/2024np/index.html" target="_blank">総務省人口推計</a>','身長・婚姻・喫煙の倍率に影響します');
 mkb(g.ctrl,'男性','',function(b){ssel(g.ctrl,b,function(){S.gender='m'},function(){S.gender=null});rebuildHt()});
@@ -172,7 +178,7 @@ var edE=mkExp(ed,'edE');EDU.forEach(function(e){var c=document.createElement('di
 
 // 5. ASSET
 var asN='年齢が若いほど資産保有の希少性↑ 補正: ';AGE.forEach(function(a,i){asN+=a.l+':<span class="hi">×'+AGE_ASSET[a.l]+'</span>'+(i<AGE.length-1?' / ':'')});asN+=' / 全年齢:×1.0';
-var as=row('💎','資産','<a href="https://www.nri.com/jp/news/newsrelease/20250213_1.html" target="_blank">野村総研(2023)</a>',asN);
+var as=row('💎','資産','<a href="https://www.nri.com/jp/news/newsrelease/20250213_1.html" target="_blank">野村総研</a> / <a href="https://www.j-flec.go.jp/data/kakekin_2024/" target="_blank">家計金融行動調査</a>',asN);
 var asE=mkExp(as,'asE');ASSET.forEach(function(a){var c=document.createElement('div');c.className='b';c.innerHTML=a.l+' <span style="font-size:.58rem;opacity:.7">'+a.s+'</span>';c.onclick=function(){ssel(asE.exp,c,function(){S.asset=a.cp;asE.btn.classList.add('has-sel')},function(){S.asset=null;asE.btn.classList.remove('has-sel')})};asE.exp.appendChild(c)});
 
 // 6. MARRIAGE
